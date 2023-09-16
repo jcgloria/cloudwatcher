@@ -1,7 +1,7 @@
 # Cloudwatcher
 ## A web-based desktop app to view AWS Cloudwatch logs
 
-Cloudwatcher is a web-based desktop app to view AWS Cloudwatch logs. It is built using [Electron](https://electronjs.org/), [React](https://reactjs.org/) and [MUI] CSS components (https://mui.com/).
+Cloudwatcher is a web-based desktop app to view AWS Cloudwatch logs. It is built using [Electron](https://electronjs.org/), [React](https://reactjs.org/) and [MUI](https://mui.com/) CSS components.
 
 ### Build steps
 1. Clone the repo
@@ -14,3 +14,5 @@ Cloudwatcher is a web-based desktop app to view AWS Cloudwatch logs. It is built
 - Add a search bar to search for keywords in the logs. 
 - Paginate log groups. 
 - Add time filtering options.
+
+Blog post: https://jcgloria.github.io/posts/aws-cloudwatch-logs-monitoring-with-a-web-based-desktop-app/
