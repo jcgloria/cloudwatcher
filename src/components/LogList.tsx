@@ -19,9 +19,10 @@ type LogListProps = {
     logGroupName: string;
     startTime: number;
     endTime: number;
+    setError: (error: string) => void;
 };
 
-export default function LogList({ logGroupName, startTime, endTime }: LogListProps) {
+export default function LogList({ logGroupName, startTime, endTime, setError }: LogListProps) {
     const [logs, setLogs] = useState<FilteredLogEvent[]>([]);
     const [hasMoreLogs, setHasMoreLogs] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +31,7 @@ export default function LogList({ logGroupName, startTime, endTime }: LogListPro
         resetEventNextToken();
         setLogs([]);
         setHasMoreLogs(true);
+        setError("");
         fetchLogs();
     }, [logGroupName, startTime, endTime]);
 
@@ -39,16 +41,19 @@ export default function LogList({ logGroupName, startTime, endTime }: LogListPro
             return;
         }
         setIsLoading(true);
-        // Reset logs and the "has more logs" state when the log group name changes
         try {
             let newLogs = await fetchLogEvents(logGroupName, startTime, endTime);
             setLogs(prevLogs => [...prevLogs, ...newLogs]);
             if (newLogs.length < 50) {
                 setHasMoreLogs(false);
             }
-        } catch (e) {
-            console.log(e);
+        } catch (e: any) {
             setHasMoreLogs(false);
+            if (e instanceof Error) {
+                setError(e.message);
+            } else {
+                console.error("Unknown error in fetchLogEvents call:", e);
+            }
         }
         setIsLoading(false);
     }
