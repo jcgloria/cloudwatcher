@@ -14,6 +14,5 @@ Cloudwatcher is a web-based desktop app to view AWS Cloudwatch logs. It is built
 - Add a search bar to search for keywords in the logs. 
 - Paginate log groups. 
 - Add time filtering options.
-- Add error alerts
 
 Blog post: https://jcgloria.github.io/posts/aws-cloudwatch-logs-monitoring-with-a-web-based-desktop-app/
