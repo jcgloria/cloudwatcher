@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchLogEvents, resetEventNextToken } from "../api/cloudwatch";
+import { fetchLogEvents, resetEventNextToken, eventNextToken, hasFetchedAllLogs } from "../api/cloudwatch";
 import { FilteredLogEvent } from "@aws-sdk/client-cloudwatch-logs";
 import { TableContainer, Typography } from "@mui/material";
 import Table from '@mui/material/Table';
@@ -13,6 +13,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 type LogListProps = {
@@ -30,25 +31,22 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
     useEffect(() => {
         resetEventNextToken();
         setLogs([]);
-        setHasMoreLogs(true);
+        setHasMoreLogs(false);
         setError("");
         fetchLogs();
     }, [logGroupName, startTime, endTime]);
 
 
     async function fetchLogs() {
-        if (isLoading) {
+        if (isLoading || (eventNextToken === undefined && hasFetchedAllLogs)) {
             return;
         }
         setIsLoading(true);
         try {
             let newLogs = await fetchLogEvents(logGroupName, startTime, endTime);
             setLogs(prevLogs => [...prevLogs, ...newLogs]);
-            if (newLogs.length < 50) {
-                setHasMoreLogs(false);
-            }
+            setHasMoreLogs(!hasFetchedAllLogs);
         } catch (e: any) {
-            setHasMoreLogs(false);
             if (e instanceof Error) {
                 setError(e.message);
             } else {
@@ -57,6 +55,7 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
         }
         setIsLoading(false);
     }
+    
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -87,8 +86,8 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
     }));
 
     return (
-        <div>
-            <Typography variant="h4" sx={{ margin: "16px" }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ margin: "12px" }}>
                 {logGroupName}
             </Typography>
             {
@@ -118,7 +117,7 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
                     </TableBody>
                 </Table>
             </TableContainer>
-            {logs.length == 0 &&
+            {logs.length == 0 && !isLoading &&
                 <Typography align="center" color="textSecondary" style={{ marginTop: 16 }}>
                     No Logs to Display
                 </Typography>
@@ -129,6 +128,7 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
                     sx={{ marginTop: '12px', width: '100%' }}
                     onClick={fetchLogs} variant="text">Load More</Button>
             )}
+            { isLoading && <CircularProgress sx={{ marginTop: '12px'}} />}
         </div>
     );
 }

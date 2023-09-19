@@ -37,8 +37,8 @@ export async function listLogGroups(pLogGroupNamePrefix: string, pLimit: number)
 }
 
 
-let eventNextToken: string | undefined = undefined; // Store the nextToken for subsequent calls
-let hasFetchedAllLogs: boolean = false;  // Variable to track if all logs have been fetched
+export let eventNextToken: string | undefined = undefined; // Store the nextToken for subsequent calls
+export let hasFetchedAllLogs: boolean = false;  // Variable to track if all logs have been fetched
 
 export function resetEventNextToken() {
   eventNextToken = undefined;
