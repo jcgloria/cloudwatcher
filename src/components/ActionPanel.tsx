@@ -1,18 +1,18 @@
 import { Box, Button, ButtonGroup, MenuItem, Select, FormControl } from "@mui/material";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { SelectChangeEvent } from "@mui/material/Select";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch } from "react";
 import dayjs from 'dayjs';
 
 type PeriodType = 'day' | 'week' | 'month';
 
 type ActionPanelProps = {
   startDate: dayjs.Dayjs | null;
-  setStartDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
+  setStartDate: Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
   endDate: dayjs.Dayjs | null;
-  setEndDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
+  setEndDate: Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
 };
 
 export default function ActionPanel({ startDate, setStartDate, endDate, setEndDate }: ActionPanelProps) {
@@ -109,7 +109,7 @@ const RelativePanel = ({ periodValue, setPeriodValue, selectedButton, setSelecte
 const AbsolutePanel = ({ startDate, endDate, setStartDate, setEndDate, unselectButton }: any) => (
   <Box sx={{ display: 'flex', gap: '8px', width: '100%', alignItems: 'center' }}>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
+      <DateTimePicker
         label="Start Date"
         value={startDate}
         onChange={(date) => {
@@ -118,7 +118,7 @@ const AbsolutePanel = ({ startDate, endDate, setStartDate, setEndDate, unselectB
         }}
         sx={{ flex: 0.5, margin: '8px' }}
       />
-      <DatePicker
+      <DateTimePicker
         label="End Date"
         value={endDate}
         onChange={(date) => {
