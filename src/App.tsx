@@ -22,6 +22,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { amber, indigo } from '@mui/material/colors';
 import AppBarComponent from './components/AppBar';
 import { Alert } from '@mui/material';
+import { Timer } from '@mui/icons-material';
 
 // Set the theme colors
 const lightTheme = createTheme({
@@ -73,7 +74,7 @@ export default function PersistentDrawerLeft() {
 
   const [open, setOpen] = useState(true); // Drawer open by default
   const savedTheme = localStorage.getItem('darkMode');
-  const initialDarkMode = savedTheme ? JSON.parse(savedTheme) : true; 
+  const initialDarkMode = savedTheme ? JSON.parse(savedTheme) : true;
   const [darkMode, setDarkMode] = useState(initialDarkMode);
 
 
@@ -104,6 +105,8 @@ export default function PersistentDrawerLeft() {
 
   // Fetch the log groups when the search value changes
   useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout>;
+
     async function fetchLogGroups() {
       setError('');
       try {
@@ -126,7 +129,14 @@ export default function PersistentDrawerLeft() {
         }
       }
     }
-    fetchLogGroups();
+    // Wait for 2 seconds after the last change to searchValue before fetching
+    timerId = setTimeout(() => {
+      fetchLogGroups();
+    }, 1000);
+    // Cleanup function: If the user types again within the 2 seconds, clear the previous timeout
+    return () => {
+      clearTimeout(timerId);
+    };
   }, [searchValue]);
 
   return (
