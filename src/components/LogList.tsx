@@ -38,8 +38,6 @@ export default function LogList({ logGroupName, startTime, endTime, setError }: 
 
 
     async function fetchLogs() {
-        console.log(startTime)
-        console.log(endTime)
         if (isLoading || (eventNextToken === undefined && hasFetchedAllLogs)) {
             return;
         }
