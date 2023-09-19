@@ -19,10 +19,9 @@ import TextField from '@mui/material/TextField';
 import LogList from './components/LogList';
 import dayjs from 'dayjs';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { amber, indigo } from '@mui/material/colors';
+import { cyan, indigo } from '@mui/material/colors';
 import AppBarComponent from './components/AppBar';
 import { Alert } from '@mui/material';
-import { Timer } from '@mui/icons-material';
 
 // Set the theme colors
 const lightTheme = createTheme({
@@ -35,7 +34,7 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: 'dark', // explicitly set dark mode
-    primary: amber,
+    primary: cyan,
   },
 });
 

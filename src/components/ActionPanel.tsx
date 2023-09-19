@@ -5,6 +5,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { SelectChangeEvent } from "@mui/material/Select";
 import { useState, useEffect, Dispatch } from "react";
 import dayjs from 'dayjs';
+import { useTheme } from "@mui/material/styles";
+
 
 type PeriodType = 'day' | 'week' | 'month';
 
@@ -19,6 +21,10 @@ export default function ActionPanel({ startDate, setStartDate, endDate, setEndDa
   const [periodValue, setPeriodValue] = useState<PeriodType>('day');
   const [selectedButton, setSelectedButton] = useState<number | null>(null);
 
+  const theme = useTheme();
+  const bgColor = theme.palette.mode === 'dark' 
+  ? 'rgba(255, 255, 255, 0.1)'  // Adjust for dark mode
+  : 'rgba(0, 0, 0, 0.1)';      // Adjust for light mode
 
   useEffect(() => {
     if (selectedButton) {
@@ -38,18 +44,17 @@ export default function ActionPanel({ startDate, setStartDate, endDate, setEndDa
         flexDirection: ['column', 'row'],
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '100%',
-        padding: '0 12px',
-        marginBottom: '16px',
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        padding: '12px 12px',
+        marginBottom: '8px',
+        backgroundColor: bgColor,
         borderRadius: '4px'
       }}
     >
-      <Box sx={{ flex: 1, width: ['100%', '40%'], marginBottom: ['12px', 0], display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ flex: 0.45 }}>
         <RelativePanel periodValue={periodValue} setPeriodValue={setPeriodValue} selectedButton={selectedButton} setSelectedButton={setSelectedButton} />
       </Box>
-      <Box sx={{ flex: 0.2 }} />  {/* This is the spacer */}
-      <Box sx={{ flex: 1, width: ['100%', '40%'], display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ flex: 0.1 }} />  {/* This is the spacer */}
+      <Box sx={{ flex: 0.45 }}>
         <AbsolutePanel
           startDate={startDate}
           endDate={endDate}
@@ -69,19 +74,19 @@ const RelativePanel = ({ periodValue, setPeriodValue, selectedButton, setSelecte
   }
 
   return (
-    <Box sx={{ display: 'flex', gap: '8px', width: '100%', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
       <ButtonGroup
         variant="contained"
-        aria-label="outlined primary button group"
         sx={{ flex: 0.8 }}
       >
         {[1, 2, 5, 10].map((num) => (
           <Button
+            size="large"
             key={num}
             onClick={() => setSelectedButton(num)}
             sx={{
-              flexGrow: 1,
               height: "60px",
+              flexGrow: 1,
               backgroundColor: num === selectedButton ? 'primary.dark' : 'primary.main'
             }}
           >
@@ -91,8 +96,6 @@ const RelativePanel = ({ periodValue, setPeriodValue, selectedButton, setSelecte
       </ButtonGroup>
       <FormControl sx={{ flex: 0.2 }}>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
           value={periodValue}
           onChange={handleChange}
         >
@@ -107,7 +110,7 @@ const RelativePanel = ({ periodValue, setPeriodValue, selectedButton, setSelecte
 };
 
 const AbsolutePanel = ({ startDate, endDate, setStartDate, setEndDate, unselectButton }: any) => (
-  <Box sx={{ display: 'flex', gap: '8px', width: '100%', alignItems: 'center' }}>
+  <Box sx={{ display: "flex", gap: "8px" }}>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateTimePicker
         label="Start Date"
@@ -116,8 +119,9 @@ const AbsolutePanel = ({ startDate, endDate, setStartDate, setEndDate, unselectB
           setStartDate(date);
           unselectButton();
         }}
-        sx={{ flex: 0.5, margin: '8px' }}
+        sx={{ flex: 0.5 }}
       />
+
       <DateTimePicker
         label="End Date"
         value={endDate}
@@ -125,7 +129,7 @@ const AbsolutePanel = ({ startDate, endDate, setStartDate, setEndDate, unselectB
           setEndDate(date);
           unselectButton();
         }}
-        sx={{ flex: 0.5, margin: '8px' }}
+        sx={{ flex: 0.5 }}
       />
     </LocalizationProvider>
   </Box>
