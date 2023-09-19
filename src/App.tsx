@@ -19,17 +19,22 @@ import TextField from '@mui/material/TextField';
 import LogList from './components/LogList';
 import dayjs from 'dayjs';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { indigo } from '@mui/material/colors';
+import { amber, indigo } from '@mui/material/colors';
 import AppBarComponent from './components/AppBar';
 import { Alert } from '@mui/material';
 
 // Set the theme colors
-const appTheme = createTheme({
+const lightTheme = createTheme({
   palette: {
+    mode: 'light',  // explicitly set light mode
     primary: indigo,
-    secondary: {
-      main: '#fedc97', // Light orange
-    }
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark', // explicitly set dark mode
+    primary: amber,
   },
 });
 
@@ -67,6 +72,10 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
 
   const [open, setOpen] = useState(true); // Drawer open by default
+  const savedTheme = localStorage.getItem('darkMode');
+  const initialDarkMode = savedTheme ? JSON.parse(savedTheme) : true; 
+  const [darkMode, setDarkMode] = useState(initialDarkMode);
+
 
   // Date pickers
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(dayjs().subtract(1, 'day')); // Default to 1 day ago
@@ -87,6 +96,11 @@ export default function PersistentDrawerLeft() {
   useEffect(() => {
     setSelectedLogGroupName(null);
   }, [logGroups]);
+
+  // Get the dark mode setting from local storage
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
 
   // Fetch the log groups when the search value changes
   useEffect(() => {
@@ -116,10 +130,10 @@ export default function PersistentDrawerLeft() {
   }, [searchValue]);
 
   return (
-    <ThemeProvider theme={appTheme}>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBarComponent open={open} handleDrawerOpen={() => setOpen(true)} settings={settings} setSettings={setSettings} />
+        <AppBarComponent open={open} handleDrawerOpen={() => setOpen(true)} settings={settings} setSettings={setSettings} onToggleDarkMode={setDarkMode} />
         <Drawer
           sx={{
             width: drawerWidth,

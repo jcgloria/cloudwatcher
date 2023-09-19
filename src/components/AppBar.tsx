@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -36,9 +36,10 @@ interface AppBarComponentProps {
     handleDrawerOpen: () => void;
     settings: boolean;
     setSettings: (value: boolean) => void;
+    onToggleDarkMode: (b: boolean) => void;
 }
 
-const AppBarComponent: React.FC<AppBarComponentProps> = ({ open, handleDrawerOpen, settings, setSettings }) => {
+const AppBarComponent: FC<AppBarComponentProps> = ({ open, handleDrawerOpen, settings, setSettings, onToggleDarkMode }) => {
     return (
         <AppBar position="fixed" open={open}>
             <Toolbar>
@@ -62,7 +63,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({ open, handleDrawerOpe
                     <Settings />
                 </IconButton>
             </Toolbar>
-            <CredentialsDialog open={settings} onClose={() => setSettings(false)} />
+            <CredentialsDialog open={settings} onClose={() => setSettings(false)} onToggleDarkMode={onToggleDarkMode} />
         </AppBar>
     );
 }
